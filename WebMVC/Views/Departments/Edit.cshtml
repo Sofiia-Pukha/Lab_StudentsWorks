@@ -1,0 +1,12 @@
+@model WebMVC.Domain.Entities.Department
+
+<h1>Редагувати кафедру</h1>
+<form asp-action="Edit">
+    <input type="hidden" asp-for="Id" />
+    <div class="form-group">
+        <label>Назва кафедри</label>
+        <input asp-for="Name" class="form-control" />
+    </div>
+    <button type="submit" class="btn btn-primary mt-3">Зберегти зміни</button>
+    <a asp-action="Index" class="btn btn-secondary mt-3">Назад</a>
+</form>

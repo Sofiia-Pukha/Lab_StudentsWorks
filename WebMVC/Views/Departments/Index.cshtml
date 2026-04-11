@@ -1,0 +1,27 @@
+@model IEnumerable<WebMVC.Domain.Entities.Department>
+
+<div class="container">
+    <h1 class="display-4">Список кафедр</h1>
+    <p>
+        <a asp-action="Create" class="btn btn-primary">Додати нову кафедру</a>
+    </p>
+
+    <table class="table table-striped">
+        <thead class="thead-dark">
+            <tr>
+                <th>Назва кафедри</th>
+                <th>Дії</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model) {
+                <tr>
+                    <td>@item.Name</td>
+                    <td>
+                        <span class="text-muted">Редагувати | Видалити</span>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>

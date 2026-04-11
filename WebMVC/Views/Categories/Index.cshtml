@@ -1,0 +1,15 @@
+@model IEnumerable<WebMVC.Domain.Entities.Category>
+
+<h1>Тематики робіт</h1>
+<p><a asp-action="Create" class="btn btn-primary">Додати тематику</a></p>
+
+<table class="table table-bordered">
+    <thead>
+        <tr><th>Назва напрямку (Тематика)</th></tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model) {
+            <tr><td>@item.Name</td></tr>
+        }
+    </tbody>
+</table>

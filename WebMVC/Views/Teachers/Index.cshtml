@@ -1,0 +1,21 @@
+@model IEnumerable<WebMVC.Domain.Entities.Teacher>
+
+<h1>Викладачі</h1>
+<p><a asp-action="Create" class="btn btn-primary">Додати викладача</a></p>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>ПІБ Викладача</th>
+            <th>Кафедра</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model) {
+            <tr>
+                <td>@item.FullName</td>
+                <td>@item.Department?.Name</td>
+            </tr>
+        }
+    </tbody>
+</table>

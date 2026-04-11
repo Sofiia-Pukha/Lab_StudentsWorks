@@ -1,0 +1,10 @@
+@model WebMVC.Domain.Entities.Category
+
+<h1>Додати нову тематику</h1>
+<form asp-action="Create">
+    <div class="form-group">
+        <label>Назва (напр. "Програмування", "Математичний аналіз")</label>
+        <input asp-for="Name" class="form-control" />
+    </div>
+    <button type="submit" class="btn btn-success mt-3">Зберегти</button>
+</form>
