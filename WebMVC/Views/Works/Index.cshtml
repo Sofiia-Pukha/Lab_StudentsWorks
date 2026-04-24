@@ -1,0 +1,39 @@
+@model IEnumerable<WebMVC.Domain.Entities.Work>
+
+<h1>Каталог студентських робіт</h1>
+<p><a asp-action="Create" class="btn btn-primary">Поділитися своєю роботою</a></p>
+
+<table class="table table-striped table-hover">
+    <thead class="table-dark">
+        <tr>
+            <th>Тема</th>
+            <th>Студент</th>
+            <th>Категорія</th>
+            <th>Викладач</th>
+            <th>Бал</th>
+            <th>Рік</th>
+            <th>Файл</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model) {
+            <tr>
+                <td class="fw-bold">@item.Title</td>
+                <td>@item.Student?.Username</td>
+                <td>@item.Category?.Name</td>
+                <td>@item.Teacher?.FullName</td>
+                <td>
+                    @(item.Grade.HasValue ? item.Grade.ToString() : "-")
+                </td>
+                <td>@item.ExecutionYear</td>
+                <td>
+                    @if (!string.IsNullOrEmpty(item.FileUrl)) {
+                        <a href="@item.FileUrl" target="_blank" class="text-primary">Відкрити</a>
+                    } else {
+                        <span class="text-muted">Немає</span>
+                    }
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>

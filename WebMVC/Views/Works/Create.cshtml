@@ -1,0 +1,68 @@
+@model WebMVC.Domain.Entities.Work
+
+@{
+    ViewData["Title"] = "Опублікувати роботу";
+}
+
+<div class="container mt-4">
+    <div class="card shadow">
+        <div class="card-header bg-success text-white">
+            <h2 class="mb-0">Завантажити мою роботу</h2>
+        </div>
+        <div class="card-body">
+            <form asp-action="Create">
+                <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+
+                <div class="row">
+                    <div class="col-md-12 mb-3">
+                        <label class="form-label fw-bold">Хто публікує? (Ваш профіль)</label>
+                        <select asp-for="StudentId" class="form-select" asp-items="ViewBag.Students">
+                            <option value="">-- Оберіть студента --</option>
+                        </select>
+                    </div>
+
+                    <div class="col-md-12 mb-3">
+                        <label class="form-label fw-bold">Тема роботи (Title)</label>
+                        <input asp-for="Title" class="form-control" placeholder="Наприклад: Розробка системи лояльності..." />
+                        <span asp-validation-for="Title" class="text-danger"></span>
+                    </div>
+
+                    <div class="col-md-6 mb-3">
+                        <label class="form-label fw-bold">Викладач-керівник</label>
+                        <select asp-for="TeacherId" class="form-select" asp-items="ViewBag.Teachers">
+                            <option value="">-- Оберіть викладача --</option>
+                        </select>
+                    </div>
+
+                    <div class="col-md-6 mb-3">
+                        <label class="form-label fw-bold">Категорія (Напрямок)</label>
+                        <select asp-for="CategoryId" class="form-select" asp-items="ViewBag.Categories">
+                            <option value="">-- Оберіть категорію --</option>
+                        </select>
+                    </div>
+
+                    <div class="col-md-6 mb-3">
+                        <label class="form-label fw-bold">Рік виконання</label>
+                        <input asp-for="ExecutionYear" type="number" class="form-control" value="@DateTime.Now.Year" />
+                    </div>
+
+                    <div class="col-md-6 mb-3">
+                        <label class="form-label fw-bold">Отриманий бал</label>
+                        <input asp-for="Grade" type="number" class="form-control" placeholder="Напр: 95" min="0" max="100" />                     
+                    </div>
+
+                    <div class="col-md-12 mb-4">
+                        <label class="form-label fw-bold">Посилання на файл</label>
+                        <input asp-for="FileUrl" class="form-control" placeholder="https://..." />
+                        <small class="text-muted">Тільки посилання, самі файли не завантажуємо.</small>
+                    </div>
+                </div>
+
+                <div class="d-flex justify-content-between">
+                    <a asp-action="Index" class="btn btn-outline-secondary">Назад до каталогу</a>
+                    <button type="submit" class="btn btn-success px-5">Опублікувати</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
