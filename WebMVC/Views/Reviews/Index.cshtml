@@ -1,0 +1,29 @@
+@model IEnumerable<WebMVC.Domain.Entities.Review>
+
+@{
+    ViewData["Title"] = "Відгуки студентів";
+}
+
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <h1>Відгуки про викладачів</h1>
+</div>
+
+<div class="row">
+    @foreach (var item in Model) {
+        <div class="col-md-6 mb-4">
+            <div class="card h-100 shadow-sm border-warning">
+                <div class="card-header bg-warning text-dark d-flex justify-content-between align-items-center">
+                    <strong class="fs-5">@item.Teacher?.FullName</strong>
+                    <span class="badge bg-dark fs-6">⭐ @item.Rating / 5</span>
+                </div>
+                <div class="card-body">
+                    <p class="card-text fs-5">"@item.Comment"</p>
+                </div>
+                <div class="card-footer text-muted small bg-white">
+                    <strong>Тема роботи:</strong> <em>@item.Work?.Title</em> <br/>
+                    <strong>Студент:</strong> @(item.Student?.Username ?? "Анонім")
+                </div>
+            </div>
+        </div>
+    }
+</div>

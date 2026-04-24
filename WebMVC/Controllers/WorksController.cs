@@ -44,7 +44,7 @@ public class WorksController : Controller
         {
             _context.Add(work);
             await _context.SaveChangesAsync();
-            return RedirectToAction(nameof(Index));
+            return RedirectToAction("Create", "Reviews", new { workId = work.Id });
         }
 
         ViewBag.Teachers = new SelectList(_context.Teachers, "Id", "FullName", work.TeacherId);

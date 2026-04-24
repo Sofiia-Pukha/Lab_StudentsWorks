@@ -1,0 +1,43 @@
+@model WebMVC.Domain.Entities.Review
+
+<div class="container mt-4">
+    <div class="row justify-content-center">
+        <div class="col-md-6">
+            <div class="card shadow-lg border-warning">
+                <div class="card-header bg-warning text-dark text-center">
+                    <h3 class="mb-0">Залишити відгук</h3>
+                </div>
+                <div class="card-body">
+                    <p class="text-center">
+                        Як пройшла співпраця з <strong>@ViewBag.TeacherName</strong> над темою "@ViewBag.WorkTitle"?
+                    </p>
+                    <hr />
+
+                    <form asp-action="Create">
+                        <input type="hidden" asp-for="WorkId" />
+                        <input type="hidden" asp-for="TeacherId" />
+                        <input type="hidden" asp-for="StudentId" />
+
+                        <div class="mb-3 text-center">
+                            <label class="form-label fw-bold">Оцінка (1-5 зірок)</label>
+                            <input asp-for="Rating" type="number" class="form-control form-control-lg text-center" 
+                                   min="1" max="5" placeholder="5" required />
+                            <small class="text-muted">Де 1 — було дуже важко, 5 — ідеально.</small>
+                        </div>
+
+                        <div class="mb-3">
+                            <label class="form-label fw-bold">Твій коментар (Review)</label>
+                            <textarea asp-for="Comment" class="form-control" rows="4" 
+                                      placeholder="Напиши чесно: чи допомагав викладач, чи вчасно відповідав?"></textarea>
+                        </div>
+
+                        <div class="d-grid gap-2">
+                            <button type="submit" class="btn btn-warning btn-lg fw-bold">Опублікувати відгук</button>
+                            <a asp-controller="Works" asp-action="Index" class="btn btn-light">Пропустити (напишу пізніше)</a>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
