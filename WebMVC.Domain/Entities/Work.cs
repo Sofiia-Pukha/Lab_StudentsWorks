@@ -1,23 +1,30 @@
-using System;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace WebMVC.Domain.Entities;
 
 public class Work
 {
     public int Id { get; set; }
-    public string Title { get; set; }
-    public string FileUrl { get; set; }
+    
+    public string Title { get; set; } = string.Empty;
+    
+    public string? FileUrl { get; set; }
+    
     public int? Grade { get; set; }
+    
     public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
+    
     public int ExecutionYear { get; set; }
 
-    // Зовнішні ключі
     public int CategoryId { get; set; }
-    public Category Category { get; set; }
+    [ForeignKey("CategoryId")]
+    public Category Category { get; set; } = null!;
 
     public int StudentId { get; set; }
-    public User Student { get; set; }
+    [ForeignKey("StudentId")]
+    public User Student { get; set; } = null!;
 
     public int TeacherId { get; set; }
-    public Teacher Teacher { get; set; }
+    [ForeignKey("TeacherId")]
+    public Teacher Teacher { get; set; } = null!;
 }

@@ -6,7 +6,6 @@ public class Review
     public int Rating { get; set; }
     public string Comment { get; set; }
 
-    // Зовнішні ключі
     public int StudentId { get; set; }
     public User Student { get; set; }
 

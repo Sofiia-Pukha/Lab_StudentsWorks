@@ -1,11 +1,16 @@
+using System.ComponentModel.DataAnnotations.Schema;
+using WebMVC.Domain.Entities;
+
 namespace WebMVC.Domain.Entities;
 
 public class Teacher
 {
     public int Id { get; set; }
-    public string FullName { get; set; }
+    public string FullName { get; set; } = string.Empty;
     
-    // Зовнішній ключ
     public int DepartmentId { get; set; }
-    public Department Department { get; set; } // Зв'язок з кафедрою
+    [ForeignKey("DepartmentId")]
+    public Department Department { get; set; } = null!;
+
+    public ICollection<Work> Works { get; set; } = new List<Work>();
 }
