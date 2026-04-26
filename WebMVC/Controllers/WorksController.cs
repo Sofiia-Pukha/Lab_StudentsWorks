@@ -15,16 +15,43 @@ public class WorksController : Controller
         _context = context;
     }
 
-    public async Task<IActionResult> Index()
+    public async Task<IActionResult> Index(string? searchString, int? categoryId, int? departmentId, int? teacherId)
     {
-        var works = await _context.Works
-            .Include(w => w.Teacher)
+        var worksQuery = _context.Works
             .Include(w => w.Category)
             .Include(w => w.Student)
-            .ToListAsync();
-        return View(works);
-    }
+            .Include(w => w.Teacher)
+                .ThenInclude(t => t.Department) 
+            .AsQueryable();
 
+        if (!string.IsNullOrEmpty(searchString))
+        {
+            worksQuery = worksQuery.Where(w => w.Title.Contains(searchString));
+        }
+
+        if (categoryId.HasValue)
+        {
+            worksQuery = worksQuery.Where(w => w.CategoryId == categoryId.Value);
+        }
+
+        if (teacherId.HasValue)
+        {
+            worksQuery = worksQuery.Where(w => w.TeacherId == teacherId.Value);
+        }
+
+        if (departmentId.HasValue)
+        {
+            worksQuery = worksQuery.Where(w => w.Teacher.DepartmentId == departmentId.Value);
+        }
+
+        ViewBag.Categories = new SelectList(await _context.Categories.ToListAsync(), "Id", "Name", categoryId);
+        ViewBag.Departments = new SelectList(await _context.Departments.ToListAsync(), "Id", "Name", departmentId);
+        ViewBag.Teachers = new SelectList(await _context.Teachers.ToListAsync(), "Id", "FullName", teacherId);
+        ViewBag.CurrentSearch = searchString;
+
+        return View(await worksQuery.ToListAsync());
+    }
+    
     public IActionResult Create()
     {
         ViewBag.Teachers = new SelectList(_context.Teachers, "Id", "FullName");
