@@ -13,4 +13,5 @@ public class Teacher
     public Department Department { get; set; } = null!;
 
     public ICollection<Work> Works { get; set; } = new List<Work>();
+    public List<Review> Reviews { get; set; } = new List<Review>();
 }

@@ -9,7 +9,7 @@ public class AppDbContext : DbContext
     {
     }
 
-        public DbSet<User> Users { get; set; }
+    public DbSet<User> Users { get; set; }
     public DbSet<Department> Departments { get; set; }
     public DbSet<Teacher> Teachers { get; set; }
     public DbSet<Category> Categories { get; set; }
@@ -38,14 +38,12 @@ public class AppDbContext : DbContext
 
         modelBuilder.Entity<Work>()
             .HasOne(w => w.Teacher)
-            .WithMany()
+            .WithMany(t => t.Works) 
             .HasForeignKey(w => w.TeacherId);
 
         modelBuilder.Entity<Review>().HasOne(r => r.Student).WithMany().HasForeignKey(r => r.StudentId);
-        modelBuilder.Entity<Review>().HasOne(r => r.Teacher).WithMany().HasForeignKey(r => r.TeacherId);
+        modelBuilder.Entity<Review>().HasOne(r => r.Teacher).WithMany(t => t.Reviews).HasForeignKey(r => r.TeacherId);
         modelBuilder.Entity<Review>().HasOne(r => r.Work).WithMany().HasForeignKey(r => r.WorkId);
-
         modelBuilder.Entity<AdminLog>().HasOne(a => a.Admin).WithMany().HasForeignKey(a => a.AdminId);
     }
 }
-

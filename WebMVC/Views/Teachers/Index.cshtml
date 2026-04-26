@@ -1,21 +1,43 @@
 @model IEnumerable<WebMVC.Domain.Entities.Teacher>
 
-<h1>Викладачі</h1>
-<p><a asp-action="Create" class="btn btn-primary">Додати викладача</a></p>
+@{
+    ViewData["Title"] = "Викладачі та їхній рейтинг";
+}
 
-<table class="table">
-    <thead>
-        <tr>
-            <th>ПІБ Викладача</th>
-            <th>Кафедра</th>
-        </tr>
-    </thead>
-    <tbody>
-        @foreach (var item in Model) {
-            <tr>
-                <td>@item.FullName</td>
-                <td>@item.Department?.Name</td>
-            </tr>
-        }
-    </tbody>
-</table>
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <h1>Рейтинг викладачів</h1>
+    <a asp-action="Create" class="btn btn-primary">+ Додати викладача</a>
+</div>
+
+<div class="row">
+    @foreach (var teacher in Model)
+    {
+        double avgRating = teacher.Reviews != null && teacher.Reviews.Any() 
+            ? Math.Round(teacher.Reviews.Average(r => r.Rating), 1) 
+            : 0;
+            
+        int reviewsCount = teacher.Reviews?.Count ?? 0;
+
+        <div class="col-md-6 col-lg-4 mb-4">
+            <div class="card h-100 shadow-sm border-0 bg-light">
+                <div class="card-body text-center p-4">
+                    <h3 class="card-title fw-bold text-dark mb-1">@teacher.FullName</h3>
+                    <h6 class="text-muted mb-4">Кафедра: @teacher.Department?.Name</h6>
+                    
+                    <div class="p-3 bg-white rounded shadow-sm">
+                        @if (reviewsCount > 0)
+                        {
+                            <h2 class="mb-0 text-warning fw-bold">⭐ @avgRating / 5</h2>
+                            <small class="text-muted">На основі @reviewsCount відгуків</small>
+                        }
+                        else
+                        {
+                            <h4 class="mb-0 text-secondary">⭐ Немає оцінок</h4>
+                            <small class="text-muted">Відгуків ще немає</small>
+                        }
+                    </div>
+                </div>
+            </div>
+        </div>
+    }
+</div>

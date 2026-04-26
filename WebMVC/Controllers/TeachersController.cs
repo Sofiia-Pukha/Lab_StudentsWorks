@@ -17,7 +17,11 @@ public class TeachersController : Controller
 
     public async Task<IActionResult> Index()
     {
-        var teachers = await _context.Teachers.Include(t => t.Department).ToListAsync();
+        var teachers = await _context.Teachers
+            .Include(t => t.Department)
+            .Include(t => t.Reviews)
+            .ToListAsync();
+            
         return View(teachers);
     }
 
