@@ -14,14 +14,20 @@ public class ReviewsController : Controller
         _context = context;
     }
 
-    public async Task<IActionResult> Index()
+    public async Task<IActionResult> Index(int? workId)
     {
-        var reviews = await _context.Reviews
+        var query = _context.Reviews
             .Include(r => r.Teacher)
             .Include(r => r.Work)
             .Include(r => r.Student)
-            .OrderByDescending(r => r.Id) 
-            .ToListAsync();
+            .AsQueryable();
+
+        if (workId.HasValue)
+        {
+            query = query.Where(r => r.WorkId == workId.Value);
+        }
+
+        var reviews = await query.OrderByDescending(r => r.Id).ToListAsync();
             
         return View(reviews);
     }
@@ -51,6 +57,10 @@ public class ReviewsController : Controller
     [ValidateAntiForgeryToken]
     public async Task<IActionResult> Create(Review review)
     {
+        ModelState.Remove("Work");
+        ModelState.Remove("Student");
+        ModelState.Remove("Teacher");
+
         if (ModelState.IsValid)
         {
             _context.Add(review);
@@ -58,6 +68,17 @@ public class ReviewsController : Controller
             
             return RedirectToAction("Index", "Works");
         }
+
+        var work = await _context.Works
+            .Include(w => w.Teacher)
+            .FirstOrDefaultAsync(w => w.Id == review.WorkId);
+            
+        if (work != null)
+        {
+            ViewBag.WorkTitle = work.Title;
+            ViewBag.TeacherName = work.Teacher?.FullName;
+        }
+
         return View(review);
     }
 }

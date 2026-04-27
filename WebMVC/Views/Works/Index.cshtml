@@ -1,5 +1,9 @@
 @model IEnumerable<WebMVC.Domain.Entities.Work>
 
+@{
+    var reviewedIds = ViewBag.ReviewedWorkIds as List<int> ?? new List<int>();
+}
+
 <div class="d-flex justify-content-between align-items-center mb-3">
     <h1>Каталог студентських робіт</h1>
     <a asp-action="Create" class="btn btn-primary">+ Поділитися своєю роботою</a>
@@ -36,7 +40,7 @@
     </div>
 </form>
 
-<table class="table table-striped table-hover">
+<table class="table table-striped table-hover align-middle">
     <thead class="table-dark">
         <tr>
             <th>Тема</th>
@@ -46,6 +50,7 @@
             <th>Бал</th>
             <th>Рік</th>
             <th>Файл</th>
+            <th>Дії</th>
         </tr>
     </thead>
     <tbody>
@@ -67,11 +72,25 @@
                             <span class="text-muted">Немає</span>
                         }
                     </td>
+                    <td>
+                        @if (reviewedIds.Contains(item.Id))
+                        {
+                            <a asp-controller="Reviews" asp-action="Index" asp-route-workId="@item.Id" class="btn btn-sm btn-success">
+                                Переглянути відгук
+                            </a>
+                        }
+                        else
+                        {
+                            <a asp-controller="Reviews" asp-action="Create" asp-route-workId="@item.Id" class="btn btn-sm btn-outline-warning text-dark fw-bold">
+                                Залишити відгук
+                            </a>
+                        }
+                    </td>
                 </tr>
             }
         } else {
             <tr>
-                <td colspan="7" class="text-center text-muted p-4">
+                <td colspan="8" class="text-center text-muted p-4">
                     За вашим запитом не знайдено жодної роботи 
                 </td>
             </tr>

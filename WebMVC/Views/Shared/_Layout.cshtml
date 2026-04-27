@@ -12,7 +12,7 @@
     <header>
         <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3">
             <div class="container-fluid">
-                <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index">Студентські роботи</a>
+                <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index">🎓 Студентські роботи</a>
                 <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target=".navbar-collapse" aria-controls="navbarSupportedContent"
                         aria-expanded="false" aria-label="Toggle navigation">
                     <span class="navbar-toggler-icon"></span>
@@ -20,7 +20,7 @@
                 <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
                     <ul class="navbar-nav flex-grow-1">
                         <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Index">Головна</a>
+                            <a class="nav-link text-dark" asp-controller="Home" asp-action="Index">Головна</a>
                         </li>
                         <li class="nav-item">
                             <a class="nav-link text-dark" asp-controller="Departments" asp-action="Index">Кафедри</a>
@@ -29,7 +29,7 @@
                             <a class="nav-link text-dark" asp-controller="Teachers" asp-action="Index">Викладачі</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link text-dark" asp-controller="Categories" asp-action="Index">Тематики робіт</a>
+                            <a class="nav-link text-dark" asp-controller="Categories" asp-action="Index">Тематики</a>
                         </li>
                         <li class="nav-item">
                             <a class="nav-link text-primary fw-bold" asp-controller="Works" asp-action="Index">Всі роботи</a>
@@ -37,6 +37,29 @@
                         <li class="nav-item">
                             <a class="nav-link text-dark fw-bold" asp-controller="Reviews" asp-action="Index">Відгуки</a>
                         </li>
+                    </ul>
+
+                    <ul class="navbar-nav">
+                        @if (User.Identity.IsAuthenticated)
+                        {
+                            <li class="nav-item dropdown">
+                                <a class="nav-link dropdown-toggle text-dark fw-bold" href="#" id="userDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                    👤 @User.Identity.Name
+                                </a>
+                                <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="userDropdown">
+                                    <li><a class="dropdown-item" asp-controller="Account" asp-action="Logout">Вийти</a></li>
+                                </ul>
+                            </li>
+                        }
+                        else
+                        {
+                            <li class="nav-item">
+                                <a class="nav-link text-dark" asp-controller="Account" asp-action="Login">Увійти</a>
+                            </li>
+                            <li class="nav-item ms-lg-2">
+                                <a class="btn btn-primary btn-sm mt-1" asp-controller="Account" asp-action="Register">Реєстрація</a>
+                            </li>
+                        }
                     </ul>
                 </div>
             </div>
@@ -51,7 +74,7 @@
 
     <footer class="border-top footer text-muted">
         <div class="container">
-            &copy; 2026 - WebMVC - <a asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
+            &copy; 2026 - Студентські роботи - <a asp-area="" asp-controller="Home" asp-action="Privacy">Конфіденційність</a>
         </div>
     </footer>
     

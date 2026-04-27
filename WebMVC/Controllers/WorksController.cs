@@ -44,6 +44,8 @@ public class WorksController : Controller
             worksQuery = worksQuery.Where(w => w.Teacher.DepartmentId == departmentId.Value);
         }
 
+        ViewBag.ReviewedWorkIds = await _context.Reviews.Select(r => r.WorkId).Distinct().ToListAsync();
+
         ViewBag.Categories = new SelectList(await _context.Categories.ToListAsync(), "Id", "Name", categoryId);
         ViewBag.Departments = new SelectList(await _context.Departments.ToListAsync(), "Id", "Name", departmentId);
         ViewBag.Teachers = new SelectList(await _context.Teachers.ToListAsync(), "Id", "FullName", teacherId);
@@ -66,6 +68,10 @@ public class WorksController : Controller
     public async Task<IActionResult> Create(Work work)
     {
         work.CreatedAt = DateTime.UtcNow;
+
+        ModelState.Remove("Category");
+        ModelState.Remove("Student");
+        ModelState.Remove("Teacher");
 
         if (ModelState.IsValid)
         {
