@@ -1,0 +1,39 @@
+@model IEnumerable<WebMVC.Domain.Entities.AdminLog>
+
+@{
+    ViewData["Title"] = "Журнал змін";
+}
+
+<div class="container mt-4">
+    <h2 class="mb-4">Історія змін</h2>
+
+    <div class="table-responsive">
+        <table class="table table-striped table-hover table-bordered">
+            <thead class="table-dark">
+                <tr>
+                    <th>Дата і час</th>
+                    <th>Адміністратор</th>
+                    <th>Таблиця</th>
+                    <th>Дія / Колонка</th>
+                    <th>Старе значення</th>
+                    <th>Нове значення</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var item in Model)
+                {
+                    <tr>
+                        <td>@item.ActionTime.ToLocalTime().ToString("dd.MM.yyyy HH:mm:ss")</td>
+                        
+                        <td class="fw-bold">@(item.Admin?.Username ?? "Невідомо")</td>
+                        
+                        <td><span class="badge bg-secondary">@item.TargetTable</span></td>
+                        <td>@item.TargetColumn</td>
+                        <td class="text-danger">@item.OldValue</td>
+                        <td class="text-success">@item.NewValue</td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+</div>
