@@ -1,0 +1,66 @@
+@model WebMVC.Domain.Entities.Work
+
+@{
+    ViewData["Title"] = "Редагувати роботу";
+}
+
+<div class="row justify-content-center">
+    <div class="col-md-6 mt-4">
+        <div class="card shadow-sm">
+            <div class="card-header bg-primary text-white">
+                <h3 class="mb-0">Редагування роботи</h3>
+            </div>
+            <div class="card-body">
+                <form asp-action="Edit">
+                    <input type="hidden" asp-for="Id" />
+                    <input type="hidden" asp-for="StudentId" />
+                    <input type="hidden" asp-for="CreatedAt" />
+
+                    <div class="mb-3">
+                        <label asp-for="Title" class="form-label fw-bold">Тема роботи</label>
+                        <input asp-for="Title" class="form-control" />
+                        <span asp-validation-for="Title" class="text-danger"></span>
+                    </div>
+
+                    <div class="mb-3">
+                        <label asp-for="CategoryId" class="form-label fw-bold">Тематика</label>
+                        <select asp-for="CategoryId" class="form-select" asp-items="ViewBag.Categories"></select>
+                    </div>
+
+                    <div class="mb-3">
+                        <label asp-for="TeacherId" class="form-label fw-bold">Викладач</label>
+                        <select asp-for="TeacherId" class="form-select" asp-items="ViewBag.Teachers"></select>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <label asp-for="ExecutionYear" class="form-label fw-bold">Рік виконання</label>
+                            <input asp-for="ExecutionYear" class="form-control" type="number" />
+                            <span asp-validation-for="ExecutionYear" class="text-danger"></span>
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label asp-for="Grade" class="form-label fw-bold">Бал (якщо є)</label>
+                            <input asp-for="Grade" class="form-control" type="number" />
+                            <span asp-validation-for="Grade" class="text-danger"></span>
+                        </div>
+                    </div>
+
+                    <div class="mb-4">
+                        <label asp-for="FileUrl" class="form-label fw-bold">Посилання на файл</label>
+                        <input asp-for="FileUrl" class="form-control" />
+                        <span asp-validation-for="FileUrl" class="text-danger"></span>
+                    </div>
+
+                    <div class="d-flex gap-2">
+                        <button type="submit" class="btn btn-success w-50">Зберегти зміни</button>
+                        <a asp-action="Index" class="btn btn-secondary w-50">Скасувати</a>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}

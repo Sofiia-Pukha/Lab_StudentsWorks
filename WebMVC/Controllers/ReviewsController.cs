@@ -1,5 +1,6 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.AspNetCore.Authorization; 
 using WebMVC.Domain.Entities;
 using WebMVC.Infrastructure;
 
@@ -14,6 +15,7 @@ public class ReviewsController : Controller
         _context = context;
     }
 
+    [AllowAnonymous]
     public async Task<IActionResult> Index(int? workId)
     {
         var query = _context.Reviews
@@ -32,6 +34,7 @@ public class ReviewsController : Controller
         return View(reviews);
     }
 
+    [Authorize(Roles = "StudentAuthor,Admin")]
     public IActionResult Create(int workId)
     {
         var work = _context.Works
@@ -53,6 +56,7 @@ public class ReviewsController : Controller
         return View(review);
     }
 
+    [Authorize(Roles = "StudentAuthor,Admin")]
     [HttpPost]
     [ValidateAntiForgeryToken]
     public async Task<IActionResult> Create(Review review)
@@ -80,5 +84,51 @@ public class ReviewsController : Controller
         }
 
         return View(review);
+    }
+
+    
+    [Authorize(Roles = "Admin")]
+    public async Task<IActionResult> Edit(int? id)
+    {
+        if (id == null) return NotFound();
+
+        var review = await _context.Reviews.FindAsync(id);
+        if (review == null) return NotFound();
+
+        return View(review);
+    }
+
+    [Authorize(Roles = "Admin")]
+    [HttpPost]
+    [ValidateAntiForgeryToken]
+    public async Task<IActionResult> Edit(int id, Review review)
+    {
+        if (id != review.Id) return NotFound();
+
+        ModelState.Remove("Work");
+        ModelState.Remove("Student");
+        ModelState.Remove("Teacher");
+
+        if (ModelState.IsValid)
+        {
+            _context.Update(review);
+            await _context.SaveChangesAsync();
+            return RedirectToAction(nameof(Index), new { workId = review.WorkId }); 
+        }
+        return View(review);
+    }
+
+    [Authorize(Roles = "Admin")]
+    public async Task<IActionResult> Delete(int? id)
+    {
+        if (id == null) return NotFound();
+
+        var review = await _context.Reviews.FirstOrDefaultAsync(m => m.Id == id);
+        if (review == null) return NotFound();
+
+        _context.Reviews.Remove(review);
+        await _context.SaveChangesAsync();
+        
+        return RedirectToAction(nameof(Index), new { workId = review.WorkId });
     }
 }

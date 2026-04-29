@@ -37,7 +37,7 @@ public class AccountController : Controller
                 Username = model.Username,
                 Email = model.Email,
                 PasswordHash = BCrypt.Net.BCrypt.HashPassword(model.Password), 
-                Role = "Student"
+                Role = UserRole.StudentAuthor 
             };
 
             _context.Users.Add(user);
@@ -63,7 +63,7 @@ public class AccountController : Controller
                 var claims = new List<Claim>
                 {
                     new Claim(ClaimTypes.Name, user.Username),
-                    new Claim(ClaimTypes.Role, user.Role),
+                    new Claim(ClaimTypes.Role, user.Role.ToString()), 
                     new Claim("UserId", user.Id.ToString())
                 };
 

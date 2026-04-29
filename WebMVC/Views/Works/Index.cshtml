@@ -6,6 +6,7 @@
 
 <div class="d-flex justify-content-between align-items-center mb-3">
     <h1>Каталог студентських робіт</h1>
+    
     <a asp-action="Create" class="btn btn-primary">+ Поділитися своєю роботою</a>
 </div>
 
@@ -45,7 +46,8 @@
         <tr>
             <th>Тема</th>
             <th>Студент</th>
-            <th>Категорія</th>
+            <th>Тематика</th>
+            <th>Кафедра</th>
             <th>Викладач</th>
             <th>Бал</th>
             <th>Рік</th>
@@ -60,6 +62,7 @@
                     <td class="fw-bold">@item.Title</td>
                     <td>@item.Student?.Username</td>
                     <td>@item.Category?.Name</td>
+                    <td>@item.Teacher?.Department?.Name</td>
                     <td>@item.Teacher?.FullName</td>
                     <td>
                         @(item.Grade.HasValue ? item.Grade.ToString() : "-")
@@ -73,24 +76,32 @@
                         }
                     </td>
                     <td>
-                        @if (reviewedIds.Contains(item.Id))
-                        {
-                            <a asp-controller="Reviews" asp-action="Index" asp-route-workId="@item.Id" class="btn btn-sm btn-success">
-                                Переглянути відгук
-                            </a>
-                        }
-                        else
-                        {
-                            <a asp-controller="Reviews" asp-action="Create" asp-route-workId="@item.Id" class="btn btn-sm btn-outline-warning text-dark fw-bold">
-                                Залишити відгук
-                            </a>
-                        }
+                        <div class="d-flex gap-2 align-items-center">
+                            @if (reviewedIds.Contains(item.Id))
+                            {
+                                <a asp-controller="Reviews" asp-action="Index" asp-route-workId="@item.Id" class="btn btn-sm btn-success">
+                                    Переглянути відгук
+                                </a>
+                            }
+                            else
+                            {
+                                <a asp-controller="Reviews" asp-action="Create" asp-route-workId="@item.Id" class="btn btn-sm btn-outline-warning text-dark fw-bold">
+                                    Залишити відгук
+                                </a>
+                            }
+
+                            @if (User.IsInRole("Admin"))
+                            {
+                                <a asp-action="Edit" asp-route-id="@item.Id" class="btn btn-sm btn-primary">Редагувати</a>
+                                <a asp-action="Delete" asp-route-id="@item.Id" class="btn btn-sm btn-danger" onclick="return confirm('Ви впевнені, що хочете видалити цю роботу?');">Видалити</a>
+                            }
+                        </div>
                     </td>
                 </tr>
             }
         } else {
             <tr>
-                <td colspan="8" class="text-center text-muted p-4">
+                <td colspan="9" class="text-center text-muted p-4">
                     За вашим запитом не знайдено жодної роботи 
                 </td>
             </tr>
