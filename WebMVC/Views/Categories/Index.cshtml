@@ -1,15 +1,30 @@
 @model IEnumerable<WebMVC.Domain.Entities.Category>
 
-<h1>Тематики робіт</h1>
-<p><a asp-action="Create" class="btn btn-primary">Додати тематику</a></p>
+@{
+    ViewData["Title"] = "Тематики робіт";
+}
 
-<table class="table table-bordered">
-    <thead>
-        <tr><th>Назва напрямку (Тематика)</th></tr>
+<h1 class="mb-4">Тематики робіт</h1>
+<p>
+    <a asp-action="Create" class="btn btn-primary">Додати тематику</a>
+</p>
+
+<table class="table table-bordered table-striped table-hover">
+    <thead class="table-dark">
+        <tr>
+            <th>Назва напрямку (Тематика)</th>
+            <th style="width: 250px;">Дії</th>
+        </tr>
     </thead>
     <tbody>
         @foreach (var item in Model) {
-            <tr><td>@item.Name</td></tr>
+            <tr>
+                <td class="align-middle">@item.Name</td>
+                <td>
+                    <a asp-action="Edit" asp-route-id="@item.Id" class="btn btn-sm btn-warning">Редагувати</a>
+                    <a asp-action="Delete" asp-route-id="@item.Id" class="btn btn-sm btn-danger" onclick="return confirm('Ви впевнені, що хочете видалити цю тематику?');">Видалити</a>
+                </td>
+            </tr>
         }
     </tbody>
 </table>

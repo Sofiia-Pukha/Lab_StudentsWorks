@@ -1,0 +1,42 @@
+@model WebMVC.Domain.Entities.Teacher
+
+@{
+    ViewData["Title"] = "Редагування викладача";
+}
+
+<div class="container mt-4">
+    <h2>Редагування даних викладача</h2>
+    <hr />
+    <div class="row">
+        <div class="col-md-6">
+            <form asp-action="Edit">
+                <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                
+                <input type="hidden" asp-for="Id" />
+
+                <div class="form-group mb-3">
+                    <label asp-for="FullName" class="control-label">ПІБ Викладача</label>
+                    <input asp-for="FullName" class="form-control" placeholder="Прізвище Ім'я По батькові" />
+                    <span asp-validation-for="FullName" class="text-danger"></span>
+                </div>
+
+                <div class="form-group mb-3">
+                    <label asp-for="DepartmentId" class="control-label">Кафедра</label>
+                    <select asp-for="DepartmentId" class="form-select" asp-items="ViewBag.Departments">
+                        <option value="">-- Оберіть кафедру --</option>
+                    </select>
+                    <span asp-validation-for="DepartmentId" class="text-danger"></span>
+                </div>
+
+                <div class="form-group mt-4">
+                    <button type="submit" class="btn btn-success">Зберегти зміни</button>
+                    <a asp-action="Index" class="btn btn-secondary">Скасувати</a>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}

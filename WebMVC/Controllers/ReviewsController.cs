@@ -3,6 +3,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Authorization; 
 using WebMVC.Domain.Entities;
 using WebMVC.Infrastructure;
+using System.Security.Claims;
 
 namespace WebMVC.Controllers;
 
@@ -86,7 +87,6 @@ public class ReviewsController : Controller
         return View(review);
     }
 
-    
     [Authorize(Roles = "Admin")]
     public async Task<IActionResult> Edit(int? id)
     {
@@ -105,15 +105,44 @@ public class ReviewsController : Controller
     {
         if (id != review.Id) return NotFound();
 
+        var reviewInDb = await _context.Reviews.FirstOrDefaultAsync(r => r.Id == id);
+        if (reviewInDb == null) return NotFound();
+
         ModelState.Remove("Work");
         ModelState.Remove("Student");
         ModelState.Remove("Teacher");
 
         if (ModelState.IsValid)
         {
-            _context.Update(review);
-            await _context.SaveChangesAsync();
-            return RedirectToAction(nameof(Index), new { workId = review.WorkId }); 
+            try
+            {
+                if (reviewInDb.Comment != review.Comment)
+                {
+                    int adminId = GetCurrentAdminId();
+                    if (adminId != 0)
+                    {
+                        _context.AdminLogs.Add(new AdminLog {
+                            AdminId = adminId,
+                            TargetTable = "Reviews",
+                            TargetColumn = "Comment",
+                            OldValue = reviewInDb.Comment,
+                            NewValue = review.Comment,
+                            ActionTime = DateTime.UtcNow
+                        });
+                    }
+
+                    reviewInDb.Comment = review.Comment;
+                    
+                    _context.Update(reviewInDb);
+                    await _context.SaveChangesAsync();
+                }
+            }
+            catch (DbUpdateConcurrencyException)
+            {
+                if (!ReviewExists(review.Id)) return NotFound();
+                else throw;
+            }
+            return RedirectToAction(nameof(Index), new { workId = reviewInDb.WorkId }); 
         }
         return View(review);
     }
@@ -126,9 +155,41 @@ public class ReviewsController : Controller
         var review = await _context.Reviews.FirstOrDefaultAsync(m => m.Id == id);
         if (review == null) return NotFound();
 
+        int currentWorkId = review.WorkId;
+
+        int adminId = GetCurrentAdminId();
+        if (adminId != 0)
+        {
+            _context.AdminLogs.Add(new AdminLog {
+                AdminId = adminId,
+                TargetTable = "Reviews",
+                TargetColumn = "Deleted",
+                OldValue = $"Видалено відгук студента. Текст: '{review.Comment}' (Оцінка: {review.Rating})",
+                NewValue = "-",
+                ActionTime = DateTime.UtcNow
+            });
+        }
+
         _context.Reviews.Remove(review);
         await _context.SaveChangesAsync();
         
-        return RedirectToAction(nameof(Index), new { workId = review.WorkId });
+        return RedirectToAction(nameof(Index), new { workId = currentWorkId });
+    }
+
+    private bool ReviewExists(int id)
+    {
+        return _context.Reviews.Any(e => e.Id == id);
+    }
+
+    private int GetCurrentAdminId()
+    {
+        var claimIdStr = User.FindFirstValue(ClaimTypes.NameIdentifier);
+        if (!string.IsNullOrEmpty(claimIdStr) && int.TryParse(claimIdStr, out int parsedId))
+        {
+            return parsedId;
+        }
+        
+        var fallbackAdmin = _context.Users.FirstOrDefault(u => u.Role == UserRole.Admin);
+        return fallbackAdmin?.Id ?? 0;
     }
 }

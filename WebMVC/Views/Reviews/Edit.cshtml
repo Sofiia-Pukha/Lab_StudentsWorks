@@ -1,0 +1,67 @@
+@model WebMVC.Domain.Entities.Review
+
+@{
+    ViewData["Title"] = "Модерація відгуку";
+}
+
+<div class="container mt-4">
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+            <div class="card shadow">
+                <div class="card-header bg-warning text-dark d-flex justify-content-between align-items-center">
+                    <h2 class="mb-0 fs-4">Модерація тексту відгуку</h2>
+                    <span class="badge bg-dark">ID відгуку: @Model.Id</span>
+                </div>
+                <div class="card-body">
+                    <form asp-action="Edit">
+                        <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                        
+                        <input type="hidden" asp-for="Id" />
+                        <input type="hidden" asp-for="WorkId" />
+                        <input type="hidden" asp-for="TeacherId" />
+                        <input type="hidden" asp-for="StudentId" />
+                        <input type="hidden" asp-for="Rating" />
+
+                        <div class="mb-4 p-3 bg-light rounded border">
+                            <label class="form-label fw-bold text-muted text-uppercase small">Оцінка студента</label>
+                            <div class="d-flex align-items-center">
+                                <span class="display-6 fw-bold text-warning me-2">@Model.Rating</span>
+                                <span class="fs-3 text-warning">
+                                    @for (int i = 0; i < Model.Rating; i++) { <i class="bi bi-star-fill">⭐</i> }
+                                </span>
+                                <span class="ms-auto text-muted italic small">@("(редагування заборонено)")</span>
+                            </div>
+                        </div>
+
+                        <div class="mb-3">
+                            <label asp-for="Comment" class="form-label fw-bold">Текст коментаря (для модерації)</label>
+                            <textarea asp-for="Comment" class="form-control" rows="6" 
+                                      placeholder="Тут можна виправити помилки або видалити некоректний зміст..."></textarea>
+                            <span asp-validation-for="Comment" class="text-danger"></span>
+                        </div>
+
+                        <hr />
+                        
+                        <div class="d-flex justify-content-between align-items-center">
+                            <a asp-action="Index" asp-route-workId="@Model.WorkId" class="btn btn-outline-secondary">
+                                <i class="bi bi-arrow-left"></i> Назад до списку
+                            </a>
+                            <button type="submit" class="btn btn-success px-4">
+                                <i class="bi bi-shield-check"></i> Зберегти виправлення
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+            
+            <div class="alert alert-info mt-3 py-2 shadow-sm">
+                <i class="bi bi-info-circle me-2"></i>
+                Адміністратор має право редагувати лише текст відгуку. Зміна оцінок студентів неможлива з міркувань об'єктивності.
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}

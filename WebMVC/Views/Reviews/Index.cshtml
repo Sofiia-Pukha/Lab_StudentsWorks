@@ -19,9 +19,25 @@
                 <div class="card-body">
                     <p class="card-text fs-5">"@item.Comment"</p>
                 </div>
-                <div class="card-footer text-muted small bg-white">
-                    <strong>Тема роботи:</strong> <em>@item.Work?.Title</em> <br/>
-                    <strong>Студент:</strong> @(item.Student?.Username ?? "Анонім")
+                <div class="card-footer bg-white">
+                    <div class="text-muted small mb-2">
+                        <strong>Тема роботи:</strong> <em>@item.Work?.Title</em> <br/>
+                        <strong>Студент:</strong> @(item.Student?.Username ?? "Анонім")
+                    </div>
+
+                    @if (User.IsInRole("Admin"))
+                    {
+                        <div class="border-top pt-2 d-flex justify-content-end">
+                            <a asp-action="Edit" asp-route-id="@item.Id" 
+                               class="btn btn-sm btn-outline-warning me-2">Редагувати</a>
+                            
+                            <a asp-action="Delete" asp-route-id="@item.Id" 
+                               class="btn btn-sm btn-outline-danger" 
+                               onclick="return confirm('Ви впевнені, що хочете видалити цей відгук?');">
+                               Видалити
+                            </a>
+                        </div>
+                    }
                 </div>
             </div>
         </div>

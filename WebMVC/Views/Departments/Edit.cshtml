@@ -1,12 +1,35 @@
 @model WebMVC.Domain.Entities.Department
 
-<h1>Редагувати кафедру</h1>
-<form asp-action="Edit">
-    <input type="hidden" asp-for="Id" />
-    <div class="form-group">
-        <label>Назва кафедри</label>
-        <input asp-for="Name" class="form-control" />
+@{
+    ViewData["Title"] = "Редагувати кафедру";
+}
+
+<div class="container mt-4">
+    <h1>Редагувати кафедру</h1>
+    <hr />
+
+    <div class="row">
+        <div class="col-md-6">
+            <form asp-action="Edit">
+                <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                
+                <input type="hidden" asp-for="Id" />
+
+                <div class="form-group mb-3">
+                    <label asp-for="Name" class="control-label fw-bold">Назва кафедри</label>
+                    <input asp-for="Name" class="form-control" />
+                    <span asp-validation-for="Name" class="text-danger"></span>
+                </div>
+
+                <div class="form-group">
+                    <button type="submit" class="btn btn-primary">Зберегти зміни</button>
+                    <a asp-action="Index" class="btn btn-secondary">Назад до списку</a>
+                </div>
+            </form>
+        </div>
     </div>
-    <button type="submit" class="btn btn-primary mt-3">Зберегти зміни</button>
-    <a asp-action="Index" class="btn btn-secondary mt-3">Назад</a>
-</form>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}

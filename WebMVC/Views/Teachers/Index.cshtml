@@ -1,43 +1,50 @@
 @model IEnumerable<WebMVC.Domain.Entities.Teacher>
 
 @{
-    ViewData["Title"] = "Викладачі та їхній рейтинг";
+    ViewData["Title"] = "Список викладачів";
 }
 
-<div class="d-flex justify-content-between align-items-center mb-4">
-    <h1>Рейтинг викладачів</h1>
-    <a asp-action="Create" class="btn btn-primary">+ Додати викладача</a>
-</div>
+<div class="container mt-4">
+    <h1 class="mb-4">Викладачі</h1>
 
-<div class="row">
-    @foreach (var teacher in Model)
-    {
-        double avgRating = teacher.Reviews != null && teacher.Reviews.Any() 
-            ? Math.Round(teacher.Reviews.Average(r => r.Rating), 1) 
-            : 0;
-            
-        int reviewsCount = teacher.Reviews?.Count ?? 0;
+    <p>
+        <a asp-action="Create" class="btn btn-primary">Додати викладача</a>
+    </p>
 
-        <div class="col-md-6 col-lg-4 mb-4">
-            <div class="card h-100 shadow-sm border-0 bg-light">
-                <div class="card-body text-center p-4">
-                    <h3 class="card-title fw-bold text-dark mb-1">@teacher.FullName</h3>
-                    <h6 class="text-muted mb-4">Кафедра: @teacher.Department?.Name</h6>
-                    
-                    <div class="p-3 bg-white rounded shadow-sm">
-                        @if (reviewsCount > 0)
+    <table class="table table-bordered table-striped table-hover">
+        <thead class="table-dark">
+            <tr>
+                <th>ПІБ Викладача</th>
+                <th>Кафедра</th>
+                <th style="width: 250px;">Дії</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model)
+            {
+                <tr>
+                    <td class="align-middle">@item.FullName</td>
+                    <td class="align-middle">
+                        @if (item.Department != null)
                         {
-                            <h2 class="mb-0 text-warning fw-bold">⭐ @avgRating / 5</h2>
-                            <small class="text-muted">На основі @reviewsCount відгуків</small>
+                            <span class="badge bg-info text-dark">@item.Department.Name</span>
                         }
                         else
                         {
-                            <h4 class="mb-0 text-secondary">⭐ Немає оцінок</h4>
-                            <small class="text-muted">Відгуків ще немає</small>
+                            <span class="text-muted">Не закріплено</span>
                         }
-                    </div>
-                </div>
-            </div>
-        </div>
-    }
+                    </td>
+                    <td>
+                        <a asp-action="Edit" asp-route-id="@item.Id" class="btn btn-sm btn-warning">Редагувати</a>
+                        
+                        <a asp-action="Delete" asp-route-id="@item.Id" 
+                           class="btn btn-sm btn-danger" 
+                           onclick="return confirm('Ви впевнені, що хочете видалити викладача @item.FullName?');">
+                            Видалити
+                        </a>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
 </div>

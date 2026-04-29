@@ -10,15 +10,17 @@
         <thead class="thead-dark">
             <tr>
                 <th>Назва кафедри</th>
-                <th>Дії</th>
+                <th style="width: 250px;">Дії</th>
             </tr>
         </thead>
         <tbody>
             @foreach (var item in Model) {
                 <tr>
-                    <td>@item.Name</td>
+                    <td class="align-middle">@item.Name</td>
                     <td>
-                        <span class="text-muted">Редагувати | Видалити</span>
+                        <a asp-action="Edit" asp-route-id="@item.Id" class="btn btn-sm btn-warning">Редагувати</a>
+                        <a asp-action="Delete" asp-route-id="@item.Id" class="btn btn-sm btn-danger" 
+                           onclick="return confirm('Ви впевнені, що хочете видалити кафедру: @item.Name?');">Видалити</a>
                     </td>
                 </tr>
             }
