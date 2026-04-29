@@ -2,6 +2,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Authorization; 
+using System.Security.Claims;
 using WebMVC.Domain.Entities;
 using WebMVC.Infrastructure;
 
@@ -124,6 +125,40 @@ public class WorksController : Controller
         {
             try
             {
+                int currentAdminId = 0;
+                var claimIdStr = User.FindFirstValue(ClaimTypes.NameIdentifier);
+
+                if (!string.IsNullOrEmpty(claimIdStr) && int.TryParse(claimIdStr, out int parsedId))
+                {
+                    currentAdminId = parsedId;
+                }
+                else
+                {
+                    var fallbackAdmin = await _context.Users.FirstOrDefaultAsync(u => u.Role == UserRole.Admin);
+                    if (fallbackAdmin != null)
+                    {
+                        currentAdminId = fallbackAdmin.Id;
+                    }
+                }
+
+                if (currentAdminId != 0)
+                {
+                    string oldValueStr = $"Бал: {workInDb.Grade}, Рік: {workInDb.ExecutionYear}";
+                    string newValueStr = $"Бал: {work.Grade}, Рік: {work.ExecutionYear}";
+
+                    var log = new AdminLog
+                    {
+                        AdminId = currentAdminId,
+                        TargetTable = "Works",
+                        TargetColumn = "Grade/Year", 
+                        OldValue = oldValueStr,
+                        NewValue = newValueStr,
+                        ActionTime = DateTime.UtcNow
+                    };
+
+                    _context.AdminLogs.Add(log);
+                }
+
                 workInDb.Title = work.Title;
                 workInDb.CategoryId = work.CategoryId;
                 workInDb.TeacherId = work.TeacherId;
@@ -155,6 +190,36 @@ public class WorksController : Controller
 
         var work = await _context.Works.FirstOrDefaultAsync(m => m.Id == id);
         if (work == null) return NotFound();
+
+        int currentAdminId = 0;
+        var claimIdStr = User.FindFirstValue(ClaimTypes.NameIdentifier);
+
+        if (!string.IsNullOrEmpty(claimIdStr) && int.TryParse(claimIdStr, out int parsedId))
+        {
+            currentAdminId = parsedId;
+        }
+        else
+        {
+            var fallbackAdmin = await _context.Users.FirstOrDefaultAsync(u => u.Role == UserRole.Admin);
+            if (fallbackAdmin != null)
+            {
+                currentAdminId = fallbackAdmin.Id;
+            }
+        }
+
+        if (currentAdminId != 0)
+        {
+            var log = new AdminLog
+            {
+                AdminId = currentAdminId,
+                TargetTable = "Works",
+                TargetColumn = "Deleted",
+                OldValue = $"Видалено роботу ID {work.Id}: '{work.Title}'",
+                NewValue = "-",
+                ActionTime = DateTime.UtcNow
+            };
+            _context.AdminLogs.Add(log);
+        }
 
         _context.Works.Remove(work);
         await _context.SaveChangesAsync();
