@@ -1,0 +1,69 @@
+@model IEnumerable<WebMVC.Domain.Entities.AdminLog>
+
+@{
+    ViewData["Title"] = "Журнал змін";
+}
+
+<div class="d-flex justify-content-between align-items-center mb-4 mt-2">
+    <h1 class="mb-0">Історія змін</h1>
+</div>
+
+<div class="card shadow-sm border-0 overflow-hidden">
+    <div class="table-responsive">
+        <table class="table table-hover align-middle mb-0">
+            <thead class="bg-primary text-white">
+                <tr>
+                    <th class="py-3 px-4 border-0">Дата і час</th>
+                    <th class="py-3 px-4 border-0">Адміністратор</th>
+                    <th class="py-3 px-4 border-0">Таблиця</th>
+                    <th class="py-3 px-4 border-0">Дія / Колонка</th>
+                    <th class="py-3 px-4 border-0">Старе значення</th>
+                    <th class="py-3 px-4 border-0">Нове значення</th>
+                </tr>
+            </thead>
+            <tbody class="border-top-0">
+                @if (Model != null && Model.Any())
+                {
+                    @foreach (var item in Model)
+                    {
+                        <tr>
+                            <td class="px-4 py-3 text-muted small whitespace-nowrap" style="white-space: nowrap;">
+                                @item.ActionTime.ToLocalTime().ToString("dd.MM.yyyy HH:mm:ss")
+                            </td>
+                            
+                            <td class="px-4 py-3 fw-bold text-dark">
+                                @(item.Admin?.Username ?? "Невідомо")
+                            </td>
+                            
+                            <td class="px-4 py-3">
+                                <span class="badge bg-light text-secondary border rounded-pill px-3 py-2 shadow-sm">
+                                    @item.TargetTable
+                                </span>
+                            </td>
+                            
+                            <td class="px-4 py-3 text-dark fw-medium">
+                                @item.TargetColumn
+                            </td>
+                            
+                            <td class="px-4 py-3 text-danger text-break" style="max-width: 250px;">
+                                @item.OldValue
+                            </td>
+                            
+                            <td class="px-4 py-3 text-success fw-bold text-break" style="max-width: 250px;">
+                                @item.NewValue
+                            </td>
+                        </tr>
+                    }
+                }
+                else
+                {
+                    <tr>
+                        <td colspan="6" class="text-center text-muted p-5 fs-5">
+                            Журнал змін порожній
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+</div>

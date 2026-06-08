@@ -1,0 +1,208 @@
+﻿@{
+    ViewData["Title"] = "Головна";
+}
+
+@if (User.IsInRole("Admin"))
+{
+    <div class="container mt-4 mt-lg-5">
+        <div class="p-4 p-md-5 mb-5 bg-white rounded-4 shadow-sm border-0">
+            <div class="row align-items-center">
+                <div class="col-md-8">
+                    <h1 class="display-5 fw-bold text-dark mb-2">Панель адміністратора </h1>
+                    <p class="lead text-muted mb-0">Вітаємо у центрі керування системою. Тут ви можете редагувати довідники, керувати користувачами та переглядати логи.</p>
+                </div>
+                <div class="col-md-4 text-md-end mt-3 mt-md-0">
+                    <span class="badge bg-danger px-3 py-2 rounded-pill fs-6 fw-semibold">Адмін-доступ</span>
+                </div>
+            </div>
+        </div>
+
+        <h3 class="fw-bold text-dark mb-4">Швидке управління розділами</h3>
+        <div class="row g-4">
+            <div class="col-md-6 col-xl-3">
+                <div class="card shadow-sm border-0 rounded-4 h-100 transition-hover bg-white p-3">
+                    <div class="card-body d-flex flex-column">
+                        <h4 class="fw-bold h5 mb-2">Кафедри</h4>
+                        <p class="text-muted small flex-grow-1">Додавання, редагування та видалення кафедр університету.</p>
+                        <a asp-controller="Departments" asp-action="Index" class="btn btn-outline-primary rounded-pill w-100 mt-3 fw-medium">Керувати</a>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-md-6 col-xl-3">
+                <div class="card shadow-sm border-0 rounded-4 h-100 transition-hover bg-white p-3">
+                    <div class="card-body d-flex flex-column">
+                        <h4 class="fw-bold h5 mb-2">Викладачі</h4>
+                        <p class="text-muted small flex-grow-1">Управління профілями наукових керівників та викладацьким складом.</p>
+                        <a asp-controller="Teachers" asp-action="Index" class="btn btn-outline-primary rounded-pill w-100 mt-3 fw-medium">Керувати</a>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-md-6 col-xl-3">
+                <div class="card shadow-sm border-0 rounded-4 h-100 transition-hover bg-white p-3">
+                    <div class="card-body d-flex flex-column">
+                        <h4 class="fw-bold h5 mb-2">Тематики</h4>
+                        <p class="text-muted small flex-grow-1">Структуризація та налаштування категорій наукових робіт.</p>
+                        <a asp-controller="Categories" asp-action="Index" class="btn btn-outline-primary rounded-pill w-100 mt-3 fw-medium">Керувати</a>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-md-6 col-xl-3">
+                <div class="card shadow-sm border-0 rounded-4 h-100 transition-hover bg-white p-3">
+                    <div class="card-body d-flex flex-column">
+                        <h4 class="fw-bold h5 mb-2">Журнал змін</h4>
+                        <p class="text-muted small flex-grow-1">Аудит дій користувачів, безпека та системні логи.</p>
+                        <a asp-controller="AdminLogs" asp-action="Index" class="btn btn-outline-danger rounded-pill w-100 mt-3 fw-medium">Переглянути логи</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+}
+else if (User.Identity != null && User.Identity.IsAuthenticated)
+{
+    <div class="container mt-4 mt-lg-5">
+        <div class="p-4 p-md-5 mb-5 bg-white rounded-4 shadow-sm border-0">
+            <div class="row align-items-center">
+                <div class="col-lg-8">
+                    <h1 class="display-5 fw-bold text-dark mb-2">Привіт, @User.Identity.Name! 👋</h1>
+                    <p class="lead text-muted mb-0">Це твій особистий кабінет. Тут ти можеш завантажувати свої наукові проєкти та відстежувати статус їхньої перевірки викладачами.</p>
+                </div>
+                <div class="col-lg-4 text-lg-end mt-4 mt-lg-0">
+                    <a asp-controller="Works" asp-action="Create" class="btn btn-primary rounded-pill px-4 py-3 fw-medium shadow-sm fs-5 d-inline-flex align-items-center gap-2">
+                        <span>➕</span> Додати власну роботу
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        <div class="bg-white rounded-4 shadow-sm p-4 mb-5">
+            <div class="d-flex justify-content-between align-items-center mb-4">
+                <h3 class="fw-bold text-dark mb-0">Твої завантажені роботи</h3>
+                <span class="badge bg-light text-dark rounded-pill px-3 py-2 fw-medium border">Всього: 1</span>
+            </div>
+
+            <div class="table-responsive">
+                <table class="table table-hover align-middle mb-0">
+                    <thead class="table-light">
+                        <tr>
+                            <th class="ps-3 py-3 border-0 rounded-start-3">Назва роботи</th>
+                            <th class="py-3 border-0">Кафедра</th>
+                            <th class="py-3 border-0">Дата завантаження</th>
+                            <th class="py-3 border-0">Статус</th>
+                            <th class="pe-3 py-3 border-0 rounded-end-3 text-end">Дії</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td class="ps-3 py-3 fw-medium text-dark">Дослідження алгоритмів машинного навчання у веб-системах</td>
+                            <td class="py-3 text-muted">Інформаційні технології</td>
+                            <td class="py-3 text-muted">17.05.2026</td>
+                            <td class="py-3">
+                                <span class="badge bg-warning-subtle text-warning border border-warning-subtle px-3 py-2 rounded-pill fw-medium">
+                                    На перевірці
+                                </span>
+                            </td>
+                            <td class="pe-3 py-3 text-end">
+                                <a asp-controller="Works" asp-action="Details" asp-route-id="1" class="btn btn-light btn-sm rounded-pill px-3 fw-medium">Переглянути</a>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+}
+else
+{
+    <div class="container mt-4 mt-lg-5">
+        <div class="row align-items-center my-5 py-4 bg-white rounded-4 shadow-sm p-4 p-md-5">
+            <div class="col-lg-7 text-center text-lg-start">
+                <h1 class="display-4 fw-bold text-dark mb-3">Шукаєш натхнення для своєї роботи? 🎓</h1>
+                <p class="lead text-muted mb-4">
+                    Наша платформа допомагає студентам знаходити актуальні тематики, переглядати успішно захищені роботи, читати відгуки та аналізувати статистику.
+                </p>
+                <div class="d-flex flex-column flex-sm-row gap-3 justify-content-center justify-content-lg-start">
+                    <a asp-controller="Works" asp-action="Index" class="btn btn-primary rounded-pill px-4 py-3 fw-medium shadow-sm fs-5">
+                        Почати пошук роботи
+                    </a>
+                    <a asp-controller="Account" asp-action="Register" class="btn btn-outline-dark rounded-pill px-4 py-3 fw-medium fs-5">
+                        Створити акаунт
+                    </a>
+                </div>
+            </div>
+            <div class="col-lg-5 d-none d-lg-block text-center">
+                <span style="font-size: 10rem;" class="d-block transform-bounce">📚</span>
+            </div>
+        </div>
+
+        <h2 class="text-center fw-bold text-dark mb-4 mt-5">Що тут можна знайти?</h2>
+        
+        <div class="row g-4 justify-content-center">
+            <div class="col-md-4">
+                <div class="card shadow-sm border-0 rounded-4 h-100 transition-hover bg-white text-center p-4">
+                    <div class="card-body d-flex flex-column">
+                        <h3 class="h4 fw-bold mb-2">База робіт</h3>
+                        <p class="text-muted small flex-grow-1">Величезний каталог реальних студентських робіт з різних кафедр та дисциплін.</p>
+                        <a asp-controller="Works" asp-action="Index" class="btn btn-light rounded-pill px-4 mt-3 fw-medium text-primary">Дивитись роботи</a>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-md-4">
+                <div class="card shadow-sm border-0 rounded-4 h-100 transition-hover bg-white text-center p-4">
+                    <div class="card-body d-flex flex-column">
+                        <h3 class="h4 fw-bold mb-2">Відгуки</h3>
+                        <p class="text-muted small flex-grow-1">Дізнайся, що думають інші студенти про теми та викладачів-керівників.</p>
+                        <a asp-controller="Reviews" asp-action="Index" class="btn btn-light rounded-pill px-4 mt-3 fw-medium text-primary">Читати відгуки</a>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-md-4">
+                <div class="card shadow-sm border-0 rounded-4 h-100 transition-hover bg-white text-center p-4">
+                    <div class="card-body d-flex flex-column">
+                        <h3 class="h4 fw-bold mb-2">Аналітика</h3>
+                        <p class="text-muted small flex-grow-1">Статистика популярних напрямків, середніх балів та активності захистів.</p>
+                        <a asp-controller="Analytics" asp-action="Index" class="btn btn-light rounded-pill px-4 mt-3 fw-medium text-primary">Перейти до графіків</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="my-5 p-4 p-md-5 bg-dark text-white rounded-4 text-center shadow">
+            <h3 class="fw-bold mb-3">Бажаєш завантажити свою роботу?</h3>
+            <p class="text-white-50 max-w-md mx-auto mb-4">
+                Зареєстровані користувачі можуть додавати власні дослідження, обирати наукових керівників та зберігати роботи в закладки.
+            </p>
+            <div class="d-flex justify-content-center gap-2">
+                <a asp-controller="Account" asp-action="Login" class="btn btn-primary rounded-pill px-4 py-2 fw-medium">Увійти</a>
+                <a asp-controller="Account" asp-action="Register" class="btn btn-outline-light rounded-pill px-4 py-2 fw-medium">Реєстрація</a>
+            </div>
+        </div>
+    </div>
+}
+
+<style>
+    .transform-bounce {
+        animation: bounce 3s infinite ease-in-out;
+    }
+    @@keyframes bounce {
+        0%, 100% { transform: translateY(0); }
+        50% { transform: translateY(-15px); }
+    }
+
+    .transition-hover {
+        transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+    .transition-hover:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 .75rem 1.5rem rgba(0,0,0,.1)!important;
+    }
+
+    footer {
+        display: none !important;
+    }
+</style>

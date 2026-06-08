@@ -1,0 +1,99 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"] - WebMVC</title>
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/WebMVC.styles.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/css/custom.css" asp-append-version="true" />
+</head>
+<body>
+    <header>
+        <nav class="navbar navbar-expand-lg navbar-light bg-white shadow-sm py-3 sticky-top mb-4">
+            <div class="container">
+                <a class="navbar-brand fw-bold d-flex align-items-center gap-2" asp-area="" asp-controller="Home" asp-action="Index">
+                    <span class="text-dark tracking-wide">Студентські роботи</span>
+                </a>
+                
+                <button class="navbar-toggler border-0 shadow-none" type="button" data-bs-toggle="collapse" data-bs-target="#mainNavbar" aria-controls="mainNavbar"
+                        aria-expanded="false" aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+                
+                <div class="collapse navbar-collapse" id="mainNavbar">
+                    <ul class="navbar-nav me-auto mb-2 mb-lg-0 gap-1 align-items-lg-center">
+                        <li class="nav-item">
+                            <a class="nav-link px-3 rounded-pill modern-nav-link fw-medium" asp-controller="Home" asp-action="Index">Головна</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link px-3 rounded-pill modern-nav-link fw-medium" asp-controller="Works" asp-action="Index">Всі роботи</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link px-3 rounded-pill modern-nav-link fw-medium" asp-controller="Reviews" asp-action="Index">Відгуки</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link px-3 rounded-pill modern-nav-link fw-medium d-flex align-items-center gap-1" asp-controller="Analytics" asp-action="Index">
+                              Аналітика
+                            </a>
+                        </li>
+
+                        @if (User.IsInRole("Admin"))
+                        {
+                            <li class="nav-item border-start ms-2 ps-2 d-none d-lg-block"></li>
+                            <li class="nav-item">
+                                <a class="nav-link px-3 rounded-pill modern-nav-link fw-medium" asp-controller="Departments" asp-action="Index">Кафедри</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link px-3 rounded-pill modern-nav-link fw-medium" asp-controller="Teachers" asp-action="Index">Викладачі</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link px-3 rounded-pill modern-nav-link fw-medium" asp-controller="Categories" asp-action="Index">Тематики</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link px-3 rounded-pill modern-nav-link fw-medium" asp-controller="AdminLogs" asp-action="Index">Журнал змін</a>
+                            </li>
+                        }
+                    </ul>
+
+                    <ul class="navbar-nav ms-lg-3 mt-3 mt-lg-0 border-start-lg ps-lg-3 gap-2 align-items-lg-center border-start">
+                        @if (User.Identity != null && User.Identity.IsAuthenticated)
+                        {
+                            <li class="nav-item dropdown">
+                                <a class="d-flex align-items-center text-dark text-decoration-none dropdown-toggle fw-bold py-2 px-3 rounded-pill hover-bg-light" href="#" id="userDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                    <span class="me-2 fs-5">👤</span> @User.Identity.Name
+                                </a>
+                                <ul class="dropdown-menu dropdown-menu-end shadow border-0 rounded-4 mt-2 p-2" aria-labelledby="userDropdown">
+                                    <li><a class="dropdown-item rounded-pill px-3 py-2 text-danger fw-medium" asp-controller="Account" asp-action="Logout">Вийти</a></li>
+                                </ul>
+                            </li>
+                        }
+                        else
+                        {
+                            <li class="nav-item">
+                                <a class="nav-link px-4 rounded-pill modern-nav-link fw-medium" asp-controller="Account" asp-action="Login">Увійти</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="btn btn-primary rounded-pill px-4 py-2 fw-medium shadow-sm" asp-controller="Account" asp-action="Register">Реєстрація</a>
+                            </li>
+                        }
+                    </ul>
+                </div>
+            </div>
+        </nav>
+    </header>
+    
+    <div class="container">
+        <main role="main" class="pb-3">
+            @RenderBody()
+        </main>
+    </div>
+
+    
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="~/js/site.js" asp-append-version="true"></script>
+    @await RenderSectionAsync("Scripts", required: false)
+</body>
+</html>

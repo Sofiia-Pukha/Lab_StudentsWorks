@@ -1,0 +1,47 @@
+@model WebMVC.Models.LoginViewModel
+
+@{
+    ViewData["Title"] = "Вхід";
+}
+
+<div class="container mt-5">
+    <div class="row justify-content-center">
+        <div class="col-md-6 col-lg-5">
+            <div class="card shadow border-0 rounded-4 overflow-hidden">
+                <div class="card-header bg-primary text-white py-4 px-4 text-center border-0">
+                    <h2 class="h4 mb-0 fw-bold">Вхід до системи</h2>
+                </div>
+                <div class="card-body p-4 p-md-5">
+                    <form asp-action="Login" method="post">
+                        <div asp-validation-summary="ModelOnly" class="text-danger mb-3 small fw-medium"></div>
+
+                        <div class="mb-4">
+                            <label asp-for="Username" class="form-label fw-bold small text-uppercase tracking-wider text-muted">Логін</label>
+                            <input asp-for="Username" class="form-control rounded-pill px-4 py-2" placeholder="Введіть ваш логін..." />
+                            <span asp-validation-for="Username" class="text-danger small d-block mt-1 ms-2"></span>
+                        </div>
+
+                        <div class="mb-5">
+                            <label asp-for="Password" class="form-label fw-bold small text-uppercase tracking-wider text-muted">Пароль</label>
+                            <input asp-for="Password" type="password" class="form-control rounded-pill px-4 py-2" placeholder="Введіть ваш пароль..." />
+                            <span asp-validation-for="Password" class="text-danger small d-block mt-1 ms-2"></span>
+                        </div>
+
+                        <button type="submit" class="btn btn-primary rounded-pill w-100 py-3 fs-6 fw-bold shadow-sm mb-4">
+                            Увійти
+                        </button>
+                    </form>
+                    
+                    <div class="text-center border-top pt-4">
+                        <span class="text-muted">Немає акаунту?</span>
+                        <a asp-action="Register" class="text-primary fw-bold text-decoration-none ms-1">Зареєструватися</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}

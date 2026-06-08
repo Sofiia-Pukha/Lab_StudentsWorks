@@ -1,0 +1,51 @@
+:root {
+  --bs-body-bg: #ffffff; 
+}
+
+html {
+  font-size: 14px;
+  position: relative;
+  min-height: 100%;
+}
+
+@media (min-width: 768px) {
+  html {
+    font-size: 16px;
+  }
+}
+
+.btn:focus, .btn:active:focus, .btn-link.nav-link:focus, .form-control:focus, .form-check-input:focus {
+  box-shadow: 0 0 0 0.1rem white, 0 0 0 0.25rem #258cfb;
+}
+
+body {
+  margin-bottom: 60px;
+  background-color: #ffffff !important;
+}
+
+
+
+.modern-nav-link {
+    transition: all 0.2s ease-in-out;
+    color: #212529 !important; 
+}
+
+.modern-nav-link:hover {
+    background-color: rgba(37, 140, 251, 0.08); 
+    color: #258cfb !important; 
+    transform: translateY(-1px);
+}
+
+.hover-bg-light {
+    transition: background-color 0.2s ease;
+}
+.hover-bg-light:hover {
+    background-color: rgba(0, 0, 0, 0.05);
+}
+
+.modern-nav-link.active {
+    background-color: #258cfb;
+    color: white !important;
+    box-shadow: 0 4px 6px rgba(37, 140, 251, 0.2);
+    font-weight: 600;
+}

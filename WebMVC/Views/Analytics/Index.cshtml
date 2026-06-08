@@ -1,0 +1,154 @@
+@{
+    ViewData["Title"] = "Аналітика та Рейтинги";
+}
+
+<div class="container mt-4">
+    <h1 class="mb-4 text-center">Аналітика платформи</h1>
+
+    <div class="row">
+        <div class="col-md-12 mb-4">
+            <div class="card shadow-sm">
+                <div class="card-header bg-primary text-white">
+                    <h5 class="mb-0">Рейтинг керівників (ТОП-10)</h5>
+                </div>
+                <div class="card-body">
+                    <canvas id="teacherChart" style="min-height: 450px;"></canvas>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-12 mb-4">
+            <div class="card shadow-sm">
+                <div class="card-header bg-success text-white">
+                    <h5 class="mb-0">Популярність тем</h5>
+                </div>
+                <div class="card-body" style="display: flex; justify-content: center;">
+                    <canvas id="topicChart" style="max-height: 400px;"></canvas>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-12 mb-4">
+            <div class="card shadow-sm">
+                <div class="card-header bg-warning text-dark">
+                    <h5 class="mb-0">Шанс на хороший бал (Середній бал по кафедрах)</h5>
+                </div>
+                <div class="card-body">
+                    <canvas id="chancesChart" style="min-height: 400px;"></canvas>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            
+            fetch('/Analytics/GetTeacherRatingsData')
+                .then(response => response.json())
+                .then(data => {
+                    const ctx = document.getElementById('teacherChart').getContext('2d');
+                    new Chart(ctx, {
+                        type: 'bar',
+                        data: {
+                            labels: data.map(d => d.teacherName),
+                            datasets: [{
+                                label: 'Середній рейтинг',
+                                data: data.map(d => d.averageRating),
+                                backgroundColor: '#4A1A78', 
+                                borderRadius: 8, 
+                                barPercentage: 0.6 
+                            }]
+                        },
+                        options: { 
+                            maintainAspectRatio: false, 
+                            plugins: {
+                                legend: { display: false } 
+                            },
+                            scales: { 
+                                y: { 
+                                    beginAtZero: true, 
+                                    max: 5 
+                                },
+                                x: {
+                                    ticks: {
+                                        display: false 
+                                    },
+                                    grid: {
+                                        display: false 
+                                    }
+                                }
+                            } 
+                        }
+                    });
+                });
+
+            fetch('/Analytics/GetTopicPopularityData')
+                .then(response => response.json())
+                .then(data => {
+                    const ctx = document.getElementById('topicChart').getContext('2d');
+                    new Chart(ctx, {
+                        type: 'doughnut', 
+                        data: {
+                            labels: data.map(d => d.topicName),
+                            datasets: [{
+                                label: 'Кількість робіт',
+                                data: data.map(d => d.worksCount),
+                                backgroundColor: [
+                                    '#4A1A78', '#E63C9E', '#FDBE4C', '#310F57', '#F08080', '#9D4EDD'
+                                ],
+                                borderWidth: 0 
+                            }]
+                        },
+                        options: {
+                            maintainAspectRatio: false,
+                            cutout: '70%' 
+                        }
+                    });
+                });
+
+            fetch('/Analytics/GetGradeChancesData')
+                .then(response => response.json())
+                .then(data => {
+                    const ctx = document.getElementById('chancesChart').getContext('2d');
+                    new Chart(ctx, {
+                        type: 'bar',
+                        data: {
+                            labels: data.map(d => d.departmentName),
+                            datasets: [{
+                                label: 'Середній бал кафедри',
+                                data: data.map(d => d.averageScore),
+                                backgroundColor: '#FDBE4C', 
+                                borderRadius: 8,
+                                barPercentage: 0.6
+                            }]
+                        },
+                        options: { 
+                            maintainAspectRatio: false,
+                            indexAxis: 'y', 
+                            plugins: {
+                                legend: { display: false }
+                            },
+                            scales: { 
+                                x: { 
+                                    beginAtZero: true, 
+                                    max: 100, 
+                                    ticks: {
+                                        stepSize: 10 
+                                    }
+                                },
+                                y: {
+                                    grid: {
+                                        display: false 
+                                    }
+                                }
+                            } 
+                        }
+                    });
+                });
+        });
+    </script>
+}

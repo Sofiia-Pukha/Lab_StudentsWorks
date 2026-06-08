@@ -1,0 +1,65 @@
+@model WebMVC.Domain.Entities.Review
+
+@{
+    ViewData["Title"] = "Модерація відгуку";
+}
+
+<div class="container mt-5">
+    <div class="row justify-content-center">
+        <div class="col-lg-8">
+            <div class="card shadow-sm border-0 mb-4">
+                <div class="card-header bg-primary text-white py-3 px-4 d-flex flex-column flex-sm-row justify-content-between align-items-sm-center gap-2">
+                    <h2 class="h4 mb-0 fw-bold">Модерація тексту відгуку</h2>
+                    <span class="badge bg-light text-primary rounded-pill px-3 py-2 shadow-sm border">ID: @Model.Id</span>
+                </div>
+                <div class="card-body p-4 p-md-5">
+                    <form asp-action="Edit">
+                        <div asp-validation-summary="ModelOnly" class="text-danger mb-3"></div>
+                        
+                        <input type="hidden" asp-for="Id" />
+                        <input type="hidden" asp-for="WorkId" />
+                        <input type="hidden" asp-for="TeacherId" />
+                        <input type="hidden" asp-for="StudentId" />
+                        <input type="hidden" asp-for="Rating" />
+
+                        <div class="bg-light p-4 rounded-4 mb-4 border">
+                            <label class="form-label fw-bold small text-uppercase tracking-wider text-muted mb-3 d-block">Оцінка студента</label>
+                            <div class="d-flex align-items-center flex-wrap gap-3">
+                                <div class="display-6 fw-bold text-warning mb-0 lh-1">@Model.Rating</div>
+                                <div class="fs-4 lh-1">
+                                    @for (int i = 0; i < Model.Rating; i++) { <span>⭐</span> }
+                                </div>
+                                <span class="ms-sm-auto text-muted small fst-italic">(редагування заборонено)</span>
+                            </div>
+                        </div>
+
+                        <div class="mb-5">
+                            <label asp-for="Comment" class="form-label fw-bold small text-uppercase tracking-wider">Текст коментаря (для модерації)</label>
+                            <textarea asp-for="Comment" class="form-control rounded-4 px-3 py-3" rows="6" 
+                                      placeholder="Тут можна виправити помилки або видалити некоректний зміст..."></textarea>
+                            <span asp-validation-for="Comment" class="text-danger small d-block mt-1"></span>
+                        </div>
+
+                        <div class="d-flex flex-column flex-sm-row justify-content-between gap-3 pt-3 border-top">
+                            <a asp-action="Index" asp-route-workId="@Model.WorkId" class="btn btn-light border rounded-pill px-4 py-2 order-2 order-sm-1">
+                                Назад до списку
+                            </a>
+                            <button type="submit" class="btn btn-primary rounded-pill px-5 py-2 shadow-sm order-1 order-sm-2 fw-bold">
+                                Зберегти виправлення
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+            
+            <div class="alert alert-info border shadow-sm rounded-4 p-4 d-flex gap-3 align-items-center">
+                <i class="bi bi-info-circle fs-3 text-info"></i>
+                <p class="mb-0 text-dark">Адміністратор має право редагувати лише текст відгуку. Зміна оцінок студентів неможлива з міркувань об'єктивності.</p>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}

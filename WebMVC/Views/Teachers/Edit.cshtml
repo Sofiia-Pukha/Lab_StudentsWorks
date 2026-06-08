@@ -1,0 +1,47 @@
+@model WebMVC.Domain.Entities.Teacher
+
+@{
+    ViewData["Title"] = "Редагування викладача";
+}
+
+<div class="container mt-5">
+    <div class="row justify-content-center">
+        <div class="col-lg-8">
+            <div class="card shadow-sm border-0">
+                <div class="card-header bg-primary text-white py-3 px-4">
+                    <h2 class="h4 mb-0 fw-bold">Редагування даних викладача</h2>
+                </div>
+                <div class="card-body p-4 p-md-5">
+                    <form asp-action="Edit">
+                        <div asp-validation-summary="ModelOnly" class="text-danger mb-3"></div>
+                        
+                        <input type="hidden" asp-for="Id" />
+
+                        <div class="mb-4">
+                            <label asp-for="FullName" class="form-label fw-bold small text-uppercase tracking-wider">ПІБ Викладача</label>
+                            <input asp-for="FullName" class="form-control rounded-pill px-3 py-2" placeholder="Прізвище Ім'я По батькові" />
+                            <span asp-validation-for="FullName" class="text-danger small d-block mt-1"></span>
+                        </div>
+
+                        <div class="mb-5">
+                            <label asp-for="DepartmentId" class="form-label fw-bold small text-uppercase tracking-wider">Кафедра</label>
+                            <select asp-for="DepartmentId" class="form-select rounded-pill px-3 py-2" asp-items="ViewBag.Departments">
+                                <option value="">-- Оберіть кафедру --</option>
+                            </select>
+                            <span asp-validation-for="DepartmentId" class="text-danger small d-block mt-1"></span>
+                        </div>
+
+                        <div class="d-flex flex-column flex-sm-row justify-content-between gap-3 pt-3 border-top">
+                            <a asp-action="Index" class="btn btn-light border rounded-pill px-4 py-2 order-2 order-sm-1">Скасувати</a>
+                            <button type="submit" class="btn btn-primary rounded-pill px-5 py-2 shadow-sm order-1 order-sm-2 fw-bold">Зберегти зміни</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}

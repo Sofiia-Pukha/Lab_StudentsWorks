@@ -1,0 +1,51 @@
+@model WebMVC.Domain.Entities.User
+
+@{
+    ViewData["Title"] = "Видалити користувача";
+}
+
+<div class="container mt-5">
+    <div class="row justify-content-center">
+        <div class="col-lg-8">
+            <div class="card shadow-sm border-0">
+                <div class="card-header bg-danger text-white py-3 px-4">
+                    <h2 class="h4 mb-0 fw-bold">Видалити користувача</h2>
+                </div>
+                <div class="card-body p-4 p-md-5">
+                    
+                    <div class="alert alert-warning border-0 shadow-sm rounded-4 mb-4 p-4">
+                        <h4 class="alert-heading h5 fw-bold mb-2">Ви впевнені?</h4>
+                        <p class="mb-0 text-dark">Ви збираєтесь назавжди видалити цього користувача з системи. Цю дію неможливо скасувати.</p>
+                    </div>
+
+                    <div class="bg-light p-4 rounded-4 mb-5 border">
+                        <div class="row mb-3 align-items-center">
+                            <div class="col-sm-4 fw-bold small text-uppercase tracking-wider text-muted">Ім'я користувача</div>
+                            <div class="col-sm-8 fw-bold fs-5 text-dark">@Html.DisplayFor(model => model.Username)</div>
+                        </div>
+                        <hr class="text-secondary opacity-25 my-3">
+                        <div class="row mb-3 align-items-center">
+                            <div class="col-sm-4 fw-bold small text-uppercase tracking-wider text-muted">Електронна пошта</div>
+                            <div class="col-sm-8 text-dark">@Html.DisplayFor(model => model.Email)</div>
+                        </div>
+                        <hr class="text-secondary opacity-25 my-3">
+                        <div class="row align-items-center">
+                            <div class="col-sm-4 fw-bold small text-uppercase tracking-wider text-muted">Роль</div>
+                            <div class="col-sm-8">
+                                <span class="badge bg-primary rounded-pill px-3 py-2">@Html.DisplayFor(model => model.Role)</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <form asp-action="Delete">
+                        <input type="hidden" asp-for="Id" />
+                        <div class="d-flex flex-column flex-sm-row justify-content-between gap-3 pt-3 border-top">
+                            <a asp-action="Index" class="btn btn-light border rounded-pill px-4 py-2 order-2 order-sm-1">Назад до списку</a>
+                            <button type="submit" class="btn btn-danger rounded-pill px-5 py-2 shadow-sm order-1 order-sm-2 fw-bold">Видалити назавжди</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

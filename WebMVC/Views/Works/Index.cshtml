@@ -1,0 +1,131 @@
+@using System.Security.Claims
+@model IEnumerable<WebMVC.Domain.Entities.Work>
+
+@{
+    var reviewedIds = ViewBag.ReviewedWorkIds as List<int> ?? new List<int>();
+}
+
+<div class="d-flex justify-content-between align-items-center mb-4 mt-2">
+    <h1 class="mb-0">Каталог студентських робіт</h1>
+    <a asp-action="Create" class="btn btn-primary shadow-sm">+ Поділитися своєю роботою</a>
+</div>
+
+<div class="card shadow-sm mb-4">
+    <div class="card-body p-4">
+        <form asp-action="Index" method="get" class="m-0">
+            <div class="row g-3">
+                <div class="col-md-3">
+                    <input type="text" name="searchString" value="@ViewBag.CurrentSearch" class="form-control rounded-pill px-3" placeholder="Пошук за назвою..." />
+                </div>
+                
+                <div class="col-md-2">
+                    <select name="categoryId" class="form-select rounded-pill px-3" asp-items="ViewBag.Categories">
+                        <option value="">Усі тематики</option>
+                    </select>
+                </div>
+
+                <div class="col-md-3">
+                    <select name="departmentId" class="form-select rounded-pill px-3" asp-items="ViewBag.Departments">
+                        <option value="">Усі кафедри</option>
+                    </select>
+                </div>
+
+                <div class="col-md-2">
+                    <select name="teacherId" class="form-select rounded-pill px-3" asp-items="ViewBag.Teachers">
+                        <option value="">Усі викладачі</option>
+                    </select>
+                </div>
+
+                <div class="col-md-2 d-flex gap-2">
+                    <button type="submit" class="btn btn-primary w-100 rounded-pill">Шукати</button>
+                    <a asp-action="Index" class="btn btn-light border w-100 rounded-pill">Скинути</a>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+
+<div class="card shadow-sm border-0 overflow-hidden">
+    <div class="table-responsive">
+        <table class="table table-hover align-middle mb-0">
+            <thead class="bg-primary text-white">
+                <tr>
+                    <th class="py-3 px-4 border-0">Тема</th>
+                    <th class="py-3 border-0">Виконавець</th> 
+                    <th class="py-3 border-0">Тематика</th>
+                    <th class="py-3 border-0">Кафедра</th>
+                    <th class="py-3 border-0">Викладач</th>
+                    <th class="py-3 border-0 text-center">Бал</th>
+                    <th class="py-3 border-0">Рік</th>
+                    <th class="py-3 border-0">Файл</th>
+                    <th class="py-3 px-4 border-0 text-end">Дії</th>
+                </tr>
+            </thead>
+            <tbody class="border-top-0">
+                @if (Model.Any()) {
+                    @foreach (var item in Model) {
+                        <tr>
+                            <td class="fw-bold px-4 py-3">@item.Title</td>
+                            
+                            <td class="py-3">@item.Student?.Username</td>
+                            
+                            <td class="py-3">
+                                <span class="badge bg-light text-dark border">@item.Category?.Name</span>
+                            </td>
+                            <td class="py-3">@item.Teacher?.Department?.Name</td>
+                            <td class="py-3">@item.Teacher?.FullName</td>
+                            <td class="py-3 text-center">
+                                @if (item.Grade.HasValue) {
+                                    <span class="badge rounded-pill bg-warning text-dark fw-bold px-3 py-2">@item.Grade.ToString()</span>
+                                } else {
+                                    <span class="text-muted">-</span>
+                                }
+                            </td>
+                            <td class="py-3">@item.ExecutionYear</td>
+                            <td class="py-3">
+                                @if (!string.IsNullOrEmpty(item.FileUrl)) {
+                                    <a href="@item.FileUrl" target="_blank" class="text-decoration-none fw-bold" style="color: var(--abc-accent);">Відкрити</a>
+                                } else {
+                                    <span class="text-muted">Немає</span>
+                                }
+                            </td>
+                            <td class="px-4 py-3 text-end">
+                                <div class="d-flex gap-2 justify-content-end align-items-center">
+                                    @{
+                                        var currentUserId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+                                        bool isMyWork = currentUserId == item.StudentId.ToString();
+                                    }
+
+                                    @if (reviewedIds.Contains(item.Id))
+                                    {
+                                        <a asp-controller="Reviews" asp-action="Index" asp-route-workId="@item.Id" class="btn btn-sm text-white rounded-pill px-3" style="background-color: var(--abc-accent);">
+                                            Відгук
+                                        </a>
+                                    }
+                                    else if (isMyWork)
+                                    {
+                                        <a asp-controller="Reviews" asp-action="Create" asp-route-workId="@item.Id" class="btn btn-sm btn-outline-dark rounded-pill px-3 fw-bold">
+                                            Залишити відгук
+                                        </a>
+                                    }
+
+                                    @if (User.IsInRole("Admin"))
+                                    {
+                                        <a asp-action="Edit" asp-route-id="@item.Id" class="btn btn-sm btn-light border rounded-pill px-3">Ред.</a>
+                                        <a asp-action="Delete" asp-route-id="@item.Id" class="btn btn-sm btn-danger rounded-pill px-3" onclick="return confirm('Ви впевнені, що хочете видалити цю роботу?');">Вид.</a>
+                                    }
+                                </div>
+                            </td>
+                        </tr>
+                    }
+                } else {
+                    <tr>
+                        <td colspan="9" class="text-center text-muted p-5 fs-5">
+                            За вашим запитом не знайдено жодної роботи 
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+</div>

@@ -1,0 +1,65 @@
+@model IEnumerable<WebMVC.Domain.Entities.Review>
+
+@{
+    ViewData["Title"] = "Відгуки студентів";
+}
+
+<div class="d-flex justify-content-between align-items-center mb-4 mt-2">
+    <h1 class="mb-0">Відгуки про викладачів</h1>
+</div>
+
+@if (Model != null && Model.Any()) {
+    <div class="row g-4">
+        @foreach (var item in Model) {
+            <div class="col-md-6 col-lg-6">
+                <div class="card shadow-sm border-0 h-100 rounded-4 d-flex flex-column transition-hover">
+                    <div class="card-body p-4 p-md-5 d-flex flex-column">
+                        
+                        <div class="d-flex justify-content-between align-items-start mb-3 gap-3">
+                            <div class="fw-bold fs-4 text-primary lh-sm">
+                                @item.Teacher?.FullName
+                            </div>
+                            <div class="badge bg-warning text-dark rounded-pill px-3 py-2 shadow-sm d-flex align-items-center gap-1 border border-warning-subtle">
+                                <span class="fs-6 fw-bold lh-1 mt-1">@item.Rating</span> 
+                                <span class="fs-6 lh-1">⭐</span>
+                            </div>
+                        </div>
+                        
+                        <div class="flex-grow-1 mb-4">
+                            <p class="card-text fs-5 text-dark fst-italic">
+                                "@item.Comment"
+                            </p>
+                        </div>
+                        
+                        <div class="bg-light rounded-4 p-3 p-md-4 small border">
+                            <div class="mb-2">
+                                <span class="text-muted text-uppercase tracking-wider fw-bold" style="font-size: 0.75rem;">Тема роботи:</span><br/>
+                                <span class="text-dark fw-medium fs-6">@item.Work?.Title</span>
+                            </div>
+                            <hr class="text-secondary opacity-25 my-2">
+                            <div>
+                                <span class="text-muted text-uppercase tracking-wider fw-bold" style="font-size: 0.75rem;">Студент:</span><br/>
+                                <span class="text-dark">@(item.Student?.Username ?? "Анонім")</span>
+                            </div>
+                        </div>
+
+                    </div>
+
+                    @if (User.IsInRole("Admin"))
+                    {
+                        <div class="card-footer bg-transparent border-top pt-3 pb-4 px-4 px-md-5 d-flex gap-2 justify-content-end align-items-center">
+                            <a asp-action="Edit" asp-route-id="@item.Id" class="btn btn-sm btn-light border rounded-pill px-4 py-2 fw-bold">Редагувати</a>
+                            <a asp-action="Delete" asp-route-id="@item.Id" class="btn btn-sm btn-danger rounded-pill px-4 py-2 fw-bold" onclick="return confirm('Ви впевнені, що хочете видалити цей відгук?');">Видалити</a>
+                        </div>
+                    }
+                </div>
+            </div>
+        }
+    </div>
+} else {
+    <div class="card shadow-sm border-0 rounded-4 mt-4">
+        <div class="card-body text-center text-muted p-5 fs-5">
+            Наразі немає жодного відгуку.
+        </div>
+    </div>
+}
